@@ -3,6 +3,7 @@ package com.example.recyclerview
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.recyclerview.databinding.ItemRecyclerBinding
 
 class AdapterRecView(private val listWayang: ArrayList<dcWayang>) :
@@ -29,5 +30,12 @@ class AdapterRecView(private val listWayang: ArrayList<dcWayang>) :
         holder.binding.namaWayang.text = wayang.nama
         holder.binding.karakterWayang.text = wayang.karakter
         holder.binding.deskripsiWayang.text = wayang.deskripsi
+        holder.binding.gambarWayang.load(wayang.foto) {
+            crossfade(true)
+            placeholder(R.drawable.ic_launcher_background)
+            error(R.drawable.ic_launcher_background)
+        }
     }
+
+
 }
