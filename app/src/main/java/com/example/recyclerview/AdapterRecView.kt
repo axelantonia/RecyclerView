@@ -14,6 +14,7 @@ class AdapterRecView(private val listWayang: ArrayList<dcWayang>) :
 
     interface OnItemClickCallback {
         fun onItemClicked(data: dcWayang)
+        fun delData(pos: Int)
     }
 
     fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
@@ -78,6 +79,13 @@ class AdapterRecView(private val listWayang: ArrayList<dcWayang>) :
 
             if (::onItemClickCallback.isInitialized) {
                 onItemClickCallback.onItemClicked(wayang)
+            }
+        }
+
+        holder.binding.btnHapus.setOnClickListener {
+            val currentPosition = holder.bindingAdapterPosition
+            if (currentPosition != RecyclerView.NO_POSITION && ::onItemClickCallback.isInitialized) {
+                onItemClickCallback.delData(currentPosition)
             }
         }
     }
