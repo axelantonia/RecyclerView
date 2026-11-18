@@ -2,6 +2,8 @@ package com.example.recyclerview
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -17,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val _arWayang = ArrayList<dcWayang>()
+    private lateinit var adapterWayang: AdapterRecView
 
     private var _nama: Array<String> = arrayOf()
     private var _karakter: Array<String> = arrayOf()
@@ -40,8 +43,42 @@ class MainActivity : AppCompatActivity() {
         tambahData()
         tampilkanData()
 
-        binding.btnToggleLayout.setOnCheckedChangeListener { _, isChecked ->
+        binding.btnToggleLayout.setOnCheckedChangeListener { _, _ ->
             tampilkanData()
+        }
+
+        binding.btnTambah.setOnClickListener {
+            val container = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(40, 20, 40, 10)
+            }
+
+            val etNamaWayang = EditText(this).apply { hint = "Nama Wayang" }
+            val etDeskripsiWayang = EditText(this).apply { hint = "Deskripsi Wayang" }
+            val etKarakterUtamaWayang = EditText(this).apply { hint = "Karakter Utama Wayang" }
+            val etGambarWayang = EditText(this).apply { hint = "Link Gambar Wayang" }
+
+            container.addView(etNamaWayang)
+            container.addView(etDeskripsiWayang)
+            container.addView(etKarakterUtamaWayang)
+            container.addView(etGambarWayang)
+
+            AlertDialog.Builder(this)
+                .setTitle("Tambah Data Wayang")
+                .setView(container)
+                .setPositiveButton("Simpan") { _, _ ->
+                    val wayangBaru = dcWayang(
+                        foto = etGambarWayang.text.toString(),
+                        nama = etNamaWayang.text.toString(),
+                        karakter = etKarakterUtamaWayang.text.toString(),
+                        deskripsi = etDeskripsiWayang.text.toString()
+                    )
+                    _arWayang.add(wayangBaru)
+                    adapterWayang.notifyItemInserted(_arWayang.size - 1)
+                    binding.rvWayang.scrollToPosition(_arWayang.size - 1)
+                }
+                .setNegativeButton("Batal", null)
+                .show()
         }
     }
 
@@ -77,9 +114,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.rvWayang.itemAnimator = DefaultItemAnimator().apply {
             removeDuration = 400L
+            addDuration = 400L
         }
 
-        val adapterWayang = AdapterRecView(_arWayang)
+        adapterWayang = AdapterRecView(_arWayang)
         adapterWayang.setOnItemClickCallback(object : AdapterRecView.OnItemClickCallback {
             override fun onItemClicked(data: dcWayang) {
                 val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
