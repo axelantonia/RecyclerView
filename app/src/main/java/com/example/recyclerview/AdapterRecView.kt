@@ -3,6 +3,7 @@ package com.example.recyclerview
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.load
 import com.example.recyclerview.databinding.ItemRecyclerBinding
 
@@ -33,6 +34,18 @@ class AdapterRecView(private val listWayang: ArrayList<dcWayang>) :
         holder.binding.gambarWayang.load(wayang.foto) {
             crossfade(true)
             placeholder(R.drawable.ic_launcher_background)
+            error(R.drawable.ic_launcher_background)
+        }
+
+        val circularProgressDrawable = CircularProgressDrawable(holder.itemView.context).apply {
+            strokeWidth = 5f
+            centerRadius = 30f
+            start()
+        }
+
+        holder.binding.gambarWayang.load(wayang.foto) {
+            crossfade(true)
+            placeholder(circularProgressDrawable)
             error(R.drawable.ic_launcher_background)
         }
     }
